@@ -1,6 +1,6 @@
 # TalkFlow AI - Premium Generative Suite (Backend)
 
-Welcome to the **TalkFlow AI** backend engine. This is a high-performance, TypeScript-based API designed to power a modern AI SaaS platform. It leverages the Google Gemini Pro architecture for intelligent content generation and integrates Paystack for seamless subscription monetization.
+Welcome to the **TalkFlow AI** backend engine. This is a high-performance, TypeScript-based API designed to power a modern AI SaaS platform. It leverages the **Groq Llama 3** architecture for ultra-fast content generation and integrates Paystack for seamless subscription monetization.
 
 ---
 
@@ -9,10 +9,11 @@ Welcome to the **TalkFlow AI** backend engine. This is a high-performance, TypeS
 TalkFlow AI is built on a "Service-Oriented Model" that decouples AI orchestration from payment processing and identity management.
 
 ### Key Pillars:
-1. **Intelligence**: Direct integration with Google Gemini API for context-aware content synthesis.
+1. **Intelligence**: Direct integration with **Groq Cloud API** (Llama 3) for blazingly fast content synthesis.
 2. **Monetization**: Tiered subscription logic integrated with Paystack's payment webhooks.
 3. **Security**: Multi-layered protection using JWT (HTTP-only cookies), Express Rate Limit, and Helmet.
-4. **Stability**: Fully typed with TypeScript to ensure runtime reliability and developer efficiency.
+4. **Resilience**: Integrated **Health Monitoring** and environment validation to ensure 99.9% uptime.
+5. **Stability**: Fully typed with TypeScript to ensure runtime reliability and developer efficiency.
 
 ---
 
@@ -25,7 +26,7 @@ TalkFlow AI is built on a "Service-Oriented Model" that decouples AI orchestrati
 - **Database**: MongoDB (via Mongoose)
 
 ### Integration Layer
-- **AI**: Google Gemini Pro (Generative AI SDK)
+- **AI**: Groq Cloud (Llama 3.3-70b-versatile)
 - **Payments**: Paystack (Transaction Verification Layer)
 - **Scheduling**: Node-Cron (Subscription Lifecycle Management)
 
@@ -63,12 +64,16 @@ Create a `.env` file in the root directory:
 ```env
 MONGO_URL=your_mongodb_connection_string
 JWT_SECRET=your_secure_authentication_secret
-GEMINI_API_KEY=your_google_gemini_api_key
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL_ID=llama-3.3-70b-versatile
 PAYSTACK_SECRET_KEY=your_paystack_secret_key
 PORT=8090
 NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
 ```
+
+### 2. Guardrails (Auto-Validation)
+The server includes a bootstrap validator that checks your `.env` on startup. If keys are missing, the server will refuse to start with a descriptive error, preventing "silent failures" in production.
 
 ### 2. Dependency Injection
 ```bash
@@ -94,9 +99,12 @@ npm start
 - `POST /api/v1/users/login`: Initialize session via secure cookies.
 - `GET /api/v1/users/profile`: Retrieve account metrics and credit status.
 
-### 🧠 Intelligence Suite
-- `POST /api/v1/google/generate-content`: Synthesize content via Gemini Pro.
+### 🧠 Intelligence Suite (Groq)
+- `POST /api/v1/groq/generate-content`: Synthesize content via Llama 3.
   - *Note: Subject to subscription-based rate limits.*
+
+### 🏥 System Health & Monitoring
+- `GET /api/v1/health`: Lightweight endpoint for frontend health-checks and uptime monitoring.
 
 ### 💳 Commerce & Subscription
 - `POST /api/v1/paystack/verify-payment/:reference`: Finalize commerce transactions.
