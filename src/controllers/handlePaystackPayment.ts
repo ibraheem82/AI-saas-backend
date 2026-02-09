@@ -248,6 +248,7 @@ export const handleFreeSubscription = asyncHandler(
         if (shouldRenewSubcriptionPlan(user)) {
             user.subscriptionPlan = 'Free';
             user.monthlyRequestCount = 5;
+            user.trialActive = false; // Ensure trial is off
             user.apiRequestCount = 0;
             user.nextBillingDate = calculateNextBillingDate();
 
