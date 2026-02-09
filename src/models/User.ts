@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser>(
         },
         trialActive: {
             type: Boolean,
-            default: true,
+            default: false,
         },
         trialExpires: {
             type: Date,
@@ -33,7 +33,7 @@ const userSchema = new Schema<IUser>(
         subscriptionPlan: {
             type: String,
             enum: ['Trial', 'Free', 'Basic', 'Premium'] as SubscriptionPlan[],
-            default: 'Trial',
+            default: 'Free',
         },
         apiRequestCount: {
             type: Number,
