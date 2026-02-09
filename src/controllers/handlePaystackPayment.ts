@@ -83,7 +83,6 @@ export const handlePaystackPayment = asyncHandler(
 
             paystackRes.on('end', () => {
                 const response: PaystackInitResponse = JSON.parse(data);
-                console.log('Paystack initialize response:', response);
 
                 if (response.status) {
                     res.json({
@@ -136,10 +135,8 @@ export const verifyPayment = asyncHandler(
             paystackRes.on('end', async () => {
                 try {
                     const response: PaystackVerifyResponse = JSON.parse(data);
-                    console.log('Paystack verify response:', response);
 
                     if (!response.status || response.data.status !== 'success') {
-                        console.log(`Payment ${reference} status is ${response.data?.status}.`);
                         res.status(400).json({
                             status: false,
                             message: 'Payment verification failed or not successful',
@@ -153,7 +150,6 @@ export const verifyPayment = asyncHandler(
                     const userFound = await User.findById(userId);
 
                     if (!userFound) {
-                        console.log(`User ${userId} not found.`);
                         res.status(404).json({ status: false, message: 'User not found' });
                         return;
                     }
@@ -218,7 +214,6 @@ export const verifyPayment = asyncHandler(
                         return;
                     }
 
-                    console.log(`Payment ${reference} verified and user ${userId} updated.`);
                     res.json({
                         status: true,
                         message: 'Payment verified, user updated',
@@ -244,7 +239,6 @@ export const verifyPayment = asyncHandler(
 export const handleFreeSubscription = asyncHandler(
     async (req: AuthenticatedRequest, res: Response): Promise<void> => {
         const user = req.user;
-        console.log('free plan', user);
 
         if (!user) {
             res.status(401).json({ error: 'Not authorized' });
