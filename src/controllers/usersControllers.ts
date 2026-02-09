@@ -171,9 +171,36 @@ export const updateUserProfile = asyncHandler(
                     email: updatedUser.email,
                 },
             });
-        } else {
+            throw new Error('User not found');
+        }
+    }
+);
+
+// Delete History Item
+export const deleteHistory = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+        const { id } = req.params;
+        const user = await User.findById(req.user?._id);
+
+        if (!user) {
             res.status(404);
             throw new Error('User not found');
         }
+
+        // Remove from User's history array
+        user.contentHistory = user.contentHistory.filter(
+            (historyId) => historyId.toString() !== id
+        );
+        await user.save();
+
+        // Remove the actual document
+        // Dynamic import to avoid circular dependency
+        const ContentHistory = (await import('../models/ContentHistory.js')).default;
+        await ContentHistory.findByIdAndDelete(id);
+
+        res.json({
+            status: 'success',
+            message: 'History item deleted successfully',
+        });
     }
 );
