@@ -1,261 +1,128 @@
-# AI SaaS Application - MERN Stack
+# TalkFlow AI - Premium Generative Suite (Backend)
 
-A full-stack AI-powered SaaS application built with the MERN stack (MongoDB, Express, React, Node.js) featuring Google Gemini AI integration, Stripe payment processing, and subscription management.
+Welcome to the **TalkFlow AI** backend engine. This is a high-performance, TypeScript-based API designed to power a modern AI SaaS platform. It leverages the Google Gemini Pro architecture for intelligent content generation and integrates Paystack for seamless subscription monetization.
 
-## Features
+---
 
-- 🤖 AI content generation powered by Google Gemini
-- 💳 Stripe payment integration for subscription plans
-- 👤 User authentication with JWT
-- 📊 Subscription management (Trial, Free, Basic, Premium)
-- 🔒 Secure API request rate limiting
-- 📅 Automated subscription renewal via cron jobs
-- 🎨 Modern React frontend with TanStack Query
-- 💅 Styled with Tailwind CSS
+## 🚀 Architectural Vision
 
-## Tech Stack
+TalkFlow AI is built on a "Service-Oriented Model" that decouples AI orchestration from payment processing and identity management.
 
-### Backend
-- **Node.js** & **Express.js** - Server framework
-- **MongoDB** with **Mongoose** - Database
-- **JWT** - Authentication
-- **Stripe** - Payment processing
-- **Google Gemini AI** - Content generation
-- **node-cron** - Scheduled tasks
+### Key Pillars:
+1. **Intelligence**: Direct integration with Google Gemini API for context-aware content synthesis.
+2. **Monetization**: Tiered subscription logic integrated with Paystack's payment webhooks.
+3. **Security**: Multi-layered protection using JWT (HTTP-only cookies), Express Rate Limit, and Helmet.
+4. **Stability**: Fully typed with TypeScript to ensure runtime reliability and developer efficiency.
 
-### Frontend
-- **React 19** - UI library
-- **Vite** - Build tool
-- **TanStack Query** - Data fetching and state management
-- **React Router** - Routing
-- **Tailwind CSS** - Styling
-- **Formik** & **Yup** - Form handling and validation
-- **Stripe React** - Payment UI components
+---
 
-## Project Structure
+## 🛠️ Tech Stack
 
-```
-AI-saas-application-mern-main/
-├── controllers/          # Business logic
-│   ├── usersControllers.js
-│   ├── googleAIController.js
-│   └── handleStripePayment.js
-├── middlewares/          # Custom middleware
-│   ├── isAuthenticated.js
-│   ├── checkApiRequestLimit.js
-│   └── errorMiddleware.js
-├── models/              # Database models
-│   ├── User.js
-│   ├── Payment.js
-│   └── ContentHistory.js
-├── routes/              # API routes
-│   ├── usersRouter.js
-│   ├── geminiAIRouter.js
-│   └── stripeRouter.js
-├── utils/               # Utility functions
-│   ├── connectDB.js
-│   ├── calculateNextBillingDate.js
-│   └── shouldRenewSubscriptionPlan.js
-├── front-app/           # React frontend
-│   ├── src/
-│   │   ├── components/
-│   │   ├── apis/
-│   │   ├── AuthContext/
-│   │   └── config.js
-│   └── package.json
-├── server.js            # Main server file
-├── .env.example         # Environment variables template
-└── package.json
-```
+### Core Engine
+- **Runtime**: Node.js
+- **Language**: TypeScript
+- **Framework**: Express.js
+- **Database**: MongoDB (via Mongoose)
 
-## Prerequisites
+### Integration Layer
+- **AI**: Google Gemini Pro (Generative AI SDK)
+- **Payments**: Paystack (Transaction Verification Layer)
+- **Scheduling**: Node-Cron (Subscription Lifecycle Management)
 
-- Node.js (v16 or higher)
-- MongoDB (local or Atlas)
-- Stripe account
-- Google Gemini API key
+### Security Suite
+- **Auth**: JSON Web Tokens (JWT) + BcryptJS
+- **Protection**: Express-Rate-Limit, Helmet, HPP, XSS-Clean
+- **Data Integrity**: Express-Mongo-Sanitize, Yup/Validation logic
 
-## Installation
+---
 
-### 1. Clone the repository
+## 📁 Project Structure
 
 ```bash
-git clone <repository-url>
-cd AI-saas-application-mern-main
+sass-backend/
+├── src/
+│   ├── controllers/      # Service Logic (AI, Auth, Payments)
+│   ├── middlewares/      # Security & Pipeline Guards (Rate Limit, Auth)
+│   ├── models/           # Mongoose Data Schemas
+│   ├── routes/           # RESTful Endpoint Definitions
+│   ├── types/            # Global TypeScript Interfaces
+│   ├── utils/            # Shared Utilities (DB Connect, Date Logic)
+│   └── server.ts         # Application Entry Point
+├── .env                  # Environment Configuration (Local)
+├── package.json          # Dependency Manifest
+└── tsconfig.json         # TypeScript Compiler Config
 ```
 
-### 2. Backend Setup
+---
 
-```bash
-# Install backend dependencies
-npm install
+## ⚙️ Setup & Installation
 
-# Create environment file
-cp .env.example .env
+### 1. Environment Configuration
+Create a `.env` file in the root directory:
 
-# Edit .env and add your credentials:
-# - MONGO_URL: Your MongoDB connection string
-# - JWT_SECRET: A secure random string
-# - GEMINI_API_KEY: Your Google Gemini API key
-# - STRIPE_SECRET_KEY: Your Stripe secret key
-# - FRONTEND_URL: Your frontend URL (http://localhost:5173 for dev)
-```
-
-### 3. Frontend Setup
-
-```bash
-# Navigate to frontend directory
-cd front-app
-
-# Install frontend dependencies
-npm install
-
-# Create environment file
-cp .env.example .env
-
-# Edit .env and add:
-# - VITE_API_BASE_URL: Backend URL (http://localhost:8090 for dev)
-# - VITE_STRIPE_PUBLISHABLE_KEY: Your Stripe publishable key
-```
-
-## Running the Application
-
-### Development Mode
-
-**Terminal 1 - Backend:**
-```bash
-# From root directory
-npm start
-```
-
-**Terminal 2 - Frontend:**
-```bash
-# From front-app directory
-npm run dev
-```
-
-The backend will run on `http://localhost:8090`  
-The frontend will run on `http://localhost:5173`
-
-## Environment Variables
-
-### Backend (.env)
 ```env
-MONGO_URL=mongodb://localhost:27017/ai-saas-db
-JWT_SECRET=your-super-secret-jwt-key
-GEMINI_API_KEY=your-gemini-api-key
-STRIPE_SECRET_KEY=sk_test_your-stripe-secret-key
+MONGO_URL=your_mongodb_connection_string
+JWT_SECRET=your_secure_authentication_secret
+GEMINI_API_KEY=your_google_gemini_api_key
+PAYSTACK_SECRET_KEY=your_paystack_secret_key
 PORT=8090
 NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
 ```
 
-### Frontend (front-app/.env)
-```env
-VITE_API_BASE_URL=http://localhost:8090
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your-stripe-publishable-key
+### 2. Dependency Injection
+```bash
+npm install
 ```
 
-## API Endpoints
+### 3. Execution
+```bash
+# Development (with TSX Watch)
+npm run dev
 
-### Authentication
-- `POST /api/v1/users/register` - Register new user
-- `POST /api/v1/users/login` - Login user
-- `POST /api/v1/users/logout` - Logout user
-- `GET /api/v1/users/auth/check` - Check auth status
-- `GET /api/v1/users/profile` - Get user profile (protected)
+# Production Build
+npm run build
+npm start
+```
 
-### AI Content Generation
-- `POST /api/v1/google/generate-content` - Generate AI content (protected, rate-limited)
+---
 
-### Payment & Subscription
-- `POST /api/v1/stripe/checkout` - Create payment intent
-- `POST /api/v1/stripe/verify-payment/:paymentId` - Verify payment
-- `POST /api/v1/stripe/free-plan` - Subscribe to free plan (protected)
+## 📡 API Ecosystem
 
-## Subscription Plans
+### 🔐 Identity Management
+- `POST /api/v1/users/register`: Create a new neural identity.
+- `POST /api/v1/users/login`: Initialize session via secure cookies.
+- `GET /api/v1/users/profile`: Retrieve account metrics and credit status.
 
-| Plan | Monthly Requests | Price |
-|------|-----------------|-------|
-| Trial | 100 | Free (3 days) |
-| Free | 5 | $0 |
-| Basic | 50 | (Configure in Stripe) |
-| Premium | 100 | (Configure in Stripe) |
+### 🧠 Intelligence Suite
+- `POST /api/v1/google/generate-content`: Synthesize content via Gemini Pro.
+  - *Note: Subject to subscription-based rate limits.*
 
-## Automated Tasks
+### 💳 Commerce & Subscription
+- `POST /api/v1/paystack/verify-payment/:reference`: Finalize commerce transactions.
+- `POST /api/v1/paystack/free-plan`: Activate the 'Explorer' tier (3-day trial).
 
-The application uses cron jobs for automated subscription management:
+---
 
-- **Trial Expiration**: Runs every hour to check and expire trial periods
-- **Monthly Reset**: Runs on the 1st of each month to reset API request counts
+## 🏦 Subscription Matrix
 
-## Security Features
+| Tier | Capacity | Duration | Notes |
+| :--- | :--- | :--- | :--- |
+| **Explorer (Trial)** | 100 Credits | 3 Days | High-intensity onboarding |
+| **Free** | 5 Credits | Perpetual | Basic exploration |
+| **Basic** | 50 Credits | 30 Days | Professional standard |
+| **Premium** | 100 Credits | 30 Days | Enterprise-grade generation |
 
-- JWT-based authentication with HTTP-only cookies
-- Password hashing with bcrypt
-- API request rate limiting per subscription plan
-- CORS configuration for frontend/backend separation
-- Environment-based configuration
+---
 
-## Development
+## 🛡️ Senior Developer Notes
 
-### Code Quality
-- ESLint configured for both backend and frontend
-- Consistent error handling across all endpoints
-- Comprehensive error messages for better debugging
+> [!IMPORTANT]
+> **Rate Limiting Engine**: The backend implements a dynamic rate-limiting middleware that checks the user's `plan` before every AI request. This is critical for maintaining infrastructure budget and prevents API abuse.
+>
+> **Atomic Payments**: Payment verification is performed server-side via direct Paystack API calls using the client-provided reference. Access is only granted *after* a 'success' response from Paystack, preventing frontend injection attacks.
 
-### State Management
-- TanStack Query for server state
-- React Context for authentication state
-- Optimistic updates for better UX
+---
 
-## Production Deployment
-
-### Backend Deployment
-1. Set `NODE_ENV=production` in environment variables
-2. Update `FRONTEND_URL` to your production frontend URL
-3. Use a production MongoDB database
-4. Configure proper CORS origins
-5. Use production Stripe keys
-
-### Frontend Deployment
-1. Update `VITE_API_BASE_URL` to your production backend URL
-2. Update `VITE_STRIPE_PUBLISHABLE_KEY` to production key
-3. Build the frontend: `npm run build`
-4. Deploy the `dist` folder to your hosting service
-
-## Troubleshooting
-
-### Common Issues
-
-**MongoDB Connection Error**
-- Ensure MongoDB is running
-- Check `MONGO_URL` in `.env`
-
-**CORS Error**
-- Verify `FRONTEND_URL` matches your frontend origin
-- Check that both servers are running
-
-**Payment Failures**
-- Confirm Stripe keys in both backend and frontend
-- Use test mode keys during development
-
-**API Request Limit**
-- Check user's subscription plan
-- Verify monthly request count hasn't been exceeded
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-This project is licensed under the ISC License.
-
-## Support
-
-For issues and questions, please create an issue in the repository.
+## 📜 License
+This software is licensed under the **ISC License**. Designed with excellence by the TalkFlow Team.
