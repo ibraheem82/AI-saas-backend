@@ -41,9 +41,16 @@ export const register = asyncHandler(
             email,
         });
 
+        /*
         newUser.trialExpires = new Date(
             new Date().getTime() + newUser.trialPeriod * 24 * 60 * 60 * 1000
         );
+        */
+
+        // Ensure they start as Free
+        newUser.trialActive = false;
+        newUser.subscriptionPlan = 'Free';
+        newUser.monthlyRequestCount = 5; // Set a low limit for free tier
 
         await newUser.save();
         res.json({
