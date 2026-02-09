@@ -13,11 +13,16 @@ import googleAIRouter from './routes/geminiAIRouter.js';
 import paystackRouter from './routes/paystackRouter.js';
 import User from './models/User.js';
 import connectDB from './utils/connectDB.js';
+import { validateEnv } from './utils/validateEnv.js';
 
 // Load environment variables
 dotenv.config();
 
+// Validate all required environment variables before proceeding
+validateEnv();
+
 const app: Application = express();
+
 const PORT = process.env.PORT || 8090;
 
 // Cron job to expire trial periods - runs every hour
@@ -96,8 +101,15 @@ cron.schedule('0 0 1 * *', async () => {
 // Connect to database
 connectDB();
 
+// ---- Health Check Endpoint ----
+// Lightweight endpoint for frontend to poll server status
+app.get('/api/v1/health', (req, res) => {
+    res.status(200).json({ status: 'active', message: 'Server is healthy' });
+});
+
 // ---- Security Middlewares ----
 app.use(helmet());
+
 
 // Rate limiting - Prevent brute force attacks
 const limiter = rateLimit({
