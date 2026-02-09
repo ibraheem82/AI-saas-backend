@@ -9,7 +9,8 @@ import mongoSanitize from 'express-mongo-sanitize';
 import hpp from 'hpp';
 import usersRouter from './routes/usersRouter.js';
 import { errorHandler } from './middlewares/errorMiddleware.js';
-import googleAIRouter from './routes/geminiAIRouter.js';
+// --- UPDATED IMPORT ---
+import groqRouter from './routes/groqRouter.js'; 
 import paystackRouter from './routes/paystackRouter.js';
 import User from './models/User.js';
 import connectDB from './utils/connectDB.js';
@@ -103,7 +104,7 @@ connectDB();
 
 // ---- Health Check Endpoint ----
 // Lightweight endpoint for frontend to poll server status
-app.get('/api/v1/health', (req, res) => {
+app.get('/api/v1/health', (_req, res) => {
     res.status(200).json({ status: 'active', message: 'Server is healthy' });
 });
 
@@ -161,7 +162,8 @@ app.use('/api/v1/users/login', authLimiter);
 app.use('/api/v1/users/register', authLimiter);
 
 app.use('/api/v1/users', usersRouter);
-app.use('/api/v1/google', googleAIRouter);
+// --- UPDATED ROUTE ---
+app.use('/api/v1/groq', groqRouter); 
 app.use('/api/v1/paystack', paystackRouter);
 
 // --- Error handler middleware ----
