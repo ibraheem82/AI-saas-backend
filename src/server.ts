@@ -10,7 +10,7 @@ import hpp from 'hpp';
 import usersRouter from './routes/usersRouter.js';
 import { errorHandler } from './middlewares/errorMiddleware.js';
 // --- UPDATED IMPORT ---
-import groqRouter from './routes/groqRouter.js'; 
+import groqRouter from './routes/groqRouter.js';
 import paystackRouter from './routes/paystackRouter.js';
 import User from './models/User.js';
 import connectDB from './utils/connectDB.js';
@@ -102,6 +102,27 @@ cron.schedule('0 0 1 * *', async () => {
 // Connect to database
 connectDB();
 
+// ---- Global Middlewares ----
+// CORS configuration - Must be applied BEFORE routes
+const allowedOrigins = process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',')
+    : ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174'];
+
+const corsOptions: cors.CorsOptions = {
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 // ---- Health Check Endpoint ----
 // Lightweight endpoint for frontend to poll server status
 app.get('/api/v1/health', (_req, res) => {
@@ -137,25 +158,6 @@ app.use(cookieParser());
 app.use(mongoSanitize());
 app.use(hpp());
 
-// CORS configuration
-const allowedOrigins = process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(',')
-    : ['http://localhost:5173'];
-
-const corsOptions: cors.CorsOptions = {
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-};
-
-app.use(cors(corsOptions));
 
 // ---- Routes ----
 app.use('/api/v1/users/login', authLimiter);
@@ -163,7 +165,7 @@ app.use('/api/v1/users/register', authLimiter);
 
 app.use('/api/v1/users', usersRouter);
 // --- UPDATED ROUTE ---
-app.use('/api/v1/groq', groqRouter); 
+app.use('/api/v1/groq', groqRouter);
 app.use('/api/v1/paystack', paystackRouter);
 
 // --- Error handler middleware ----
