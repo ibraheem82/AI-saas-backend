@@ -45,9 +45,21 @@ export const groqController = asyncHandler(
             throw new Error('Prompt is required and must be a string');
         }
 
+        // 1.5 Rate Limiting Check
+        const user = await User.findById(req.user?._id);
+        if (!user) {
+            res.status(404);
+            throw new Error('User not found');
+        }
+
+        if (user.apiRequestCount >= user.monthlyRequestCount) {
+            res.status(403);
+            throw new Error('Monthly request limit reached. Please upgrade your plan.');
+        }
+
         // 2. Configuration from .env
         const apiKey = process.env.GROQ_API_KEY;
-        const modelId = process.env.GROQ_MODEL_ID || 'llama-3.3-70b-versatile'; 
+        const modelId = process.env.GROQ_MODEL_ID || 'llama-3.3-70b-versatile';
 
         if (!apiKey) {
             res.status(500);
@@ -84,7 +96,7 @@ export const groqController = asyncHandler(
 
             if (!content) {
                 console.warn('Groq returned no content. Full response:', JSON.stringify(response.data));
-                res.status(422); 
+                res.status(422);
                 throw new Error('Groq could not generate a response.');
             }
 
@@ -132,7 +144,7 @@ export const groqController = asyncHandler(
                     res.status(503);
                     throw new Error('Groq service is temporarily overloaded.');
                 }
-                
+
                 res.status(status || 500);
                 throw new Error(apiMessage || 'Failed to communicate with AI Service');
             }
